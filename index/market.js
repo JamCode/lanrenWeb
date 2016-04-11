@@ -31,6 +31,9 @@ angular.module('myApp', []).run(function($rootScope, $window) {
     getMarketInfo($http, function(data){
         if(data.code === 0){
             $scope.marketdata = data.data;
+            $scope.marketdata.forEach(function(e){
+                e.market_fluctuate = e.market_fluctuate+'%';
+            });
         }else{
             $scope.err_code = data.code;
         }
@@ -40,6 +43,9 @@ angular.module('myApp', []).run(function($rootScope, $window) {
         getMarketInfo($http, function(data){
             if(data.code === 0){
                 $scope.marketdata = data.data;
+                $scope.marketdata.forEach(function(e){
+                    e.market_fluctuate = e.market_fluctuate+'%';
+                });
             }else{
                 $scope.err_code = data.code;
             }
