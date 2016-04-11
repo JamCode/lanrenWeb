@@ -124,7 +124,8 @@ app.post('/logout', function(req, res){
 
 app.post('/marketInfo', function(req, res){
     var returnData = {};
-    callAPI(null, '/stock/getAllMarketIndexNow', function(err, data){
+    var json = {};
+    callAPI(json, '/stock/getAllMarketIndexNow', function(err, data){
         if(err){
             returnData.code = -1;
         }else{
