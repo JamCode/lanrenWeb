@@ -41,7 +41,9 @@
   "bugs": {
     "url": "https://github.com/almasaeed2010/AdminLTE/issues"
   },
-  "dependencies": {},
+  "dependencies": {
+    "express": "^4.13.4"
+  },
   "description": "**I apologize to everyone for my slow rate of response and development recently.** This is my final semester and I am very busy. Although I usually work on AdminLTE a few hours a week, there are weeks full of exams and assignments. Thanks for your underst",
   "devDependencies": {
     "R2": "^1.4.3",
