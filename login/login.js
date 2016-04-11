@@ -25,7 +25,7 @@ angular.module('loginApp', [])
                 $scope.loginSuccess = false;
             }else{
                 $scope.loginSuccess = true;
-                $window.location.href = '/index';
+                $window.location.href = '/mypage';
                 console.log($scope.user.username);
                 $window.localStorage['user'] = $scope.user.username;
             }

@@ -43,9 +43,9 @@ app.use(express.static(__dirname+'/plugins/slimScroll/'));
 app.use(express.static(__dirname+'/plugins/sparkline/'));
 app.use(express.static(__dirname+'/dist/js/pages/'));
 app.use(express.static(__dirname+'/plugins/knob/'));
+app.use(express.static(__dirname+'/node_modules/angular'));
 app.use(express.static(__dirname+'/login'));
 app.use(express.static(__dirname+'/index'));
-app.use(express.static(__dirname+'/node_modules/angular'));
 
 
 
@@ -71,10 +71,10 @@ app.get('*', function(req, res, next){
             res.redirect('/login');
         }
     }else{
-        if(url.pathname === '/index'){
+        if(url.pathname === '/mypage'){
             next();
         }else{
-            res.redirect('/index');
+            res.redirect('/mypage');
         }
     }
 });
@@ -103,8 +103,8 @@ app.post('/login', function(req, res){
     res.send(returnData);
 });
 
-app.get('/index', function(req, res){
-    res.sendFile(path.join(__dirname, 'index/index.html'));
+app.get('/mypage', function(req, res){
+    res.sendFile(path.join(__dirname, 'index/mypage.html'));
 });
 
 app.post('/logout', function(req, res){
