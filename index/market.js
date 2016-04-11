@@ -2,7 +2,8 @@ console.log('init myApp');
 angular.module('myApp', []).run(function($rootScope, $window) {
     console.log($window.localStorage['user']);
     $rootScope.user = {
-        username: $window.localStorage['user']
+        username: $window.localStorage['user'],
+        err_code: 0
     };
 }).controller('navController',function($scope, $http, $location, $window) {
     console.log('init navController');
@@ -28,19 +29,30 @@ angular.module('myApp', []).run(function($rootScope, $window) {
     $scope.marketdata = [];
 
     getMarketInfo($http, function(data){
-        $scope.marketdata = data;
+        if(data.code === 0){
+            $scope.marketdata = data.data;
+        }else{
+            $scope.err_code = data.code;
+        }
     });
 
     $interval(function () {
         getMarketInfo($http, function(data){
-            $scope.marketdata = data;
+            if(data.code === 0){
+                $scope.marketdata = data.data;
+            }else{
+                $scope.err_code = data.code;
+            }
         });
         console.log($scope.marketdata);
     }, 10*1000);
 
     //获取自选股票
     console.log($scope.marketdata);
-
+    $scope.selected = {
+        name: '上证指数',
+        stock_code: 'sh000001'
+    };
 });
 
 function getMarketInfo(http, callback){

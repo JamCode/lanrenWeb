@@ -6,7 +6,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var parse = require('url').parse;
-
+var http = require('http');
+var hostname = '112.74.102.178';
 
 app.use(cookieParser());
 app.use(bodyParser.json());
@@ -122,32 +123,48 @@ app.post('/logout', function(req, res){
 });
 
 app.post('/marketInfo', function(req, res){
-    var returnData = [
-        {
-            name: '上证指数',
-            market_index: (2985.49+Math.random()).toFixed(2),
-            market_code: 'sh000001',
-            market_fluctuate: (-0.5+Math.random()).toFixed(2),
-            direct: (-0.5+Math.random()).toFixed(2)>0
-        },
-        {
-            name: '深证成指',
-            market_index: (10413.21+Math.random()).toFixed(2),
-            market_code: 'sz399001',
-            market_fluctuate: (-0.5+Math.random()).toFixed(2),
-            direct: (-0.5+Math.random()).toFixed(2)>0
-        },
-        {
-            name: '创业板指',
-            market_index: (2229.49+Math.random()).toFixed(2),
-            market_code: 'sz399006',
-            market_fluctuate: (-0.5+Math.random()).toFixed(2),
-            direct: (-0.5+Math.random()).toFixed(2)>0
+    var returnData = {};
+    callAPI(null, '/stock/getAllMarketIndexNow', function(err, data){
+        if(err){
+            returnData.code = -1;
+        }else{
+            returnData.code = 0;
+            returnData.data = data;
+            returnData.data.forEach(function(e){
+                e.name = e.market_name;
+                e.market_index = e.market_index_value_now;
+                e.market_fluctuate = e.market_index_fluctuate;
+                e.direct = parseFloat(e.market_fluctuate)>0;
+            });
         }
-    ];
+        console.log(returnData);
+        res.send(returnData);
+    });
 
-    console.log(returnData);
-    res.send(returnData);
+    // var returnData = [
+    //     {
+    //         name: '上证指数',
+    //         market_index: (2985.49+Math.random()).toFixed(2),
+    //         market_code: 'sh000001',
+    //         market_fluctuate: (-0.5+Math.random()).toFixed(2)+'%',
+    //         direct: (-0.5+Math.random()).toFixed(2)>0
+    //     },
+    //     {
+    //         name: '深证成指',
+    //         market_index: (10413.21+Math.random()).toFixed(2),
+    //         market_code: 'sz399001',
+    //         market_fluctuate: (-0.5+Math.random()).toFixed(2)+'%',
+    //         direct: (-0.5+Math.random()).toFixed(2)>0
+    //     },
+    //     {
+    //         name: '创业板指',
+    //         market_index: (2229.49+Math.random()).toFixed(2),
+    //         market_code: 'sz399006',
+    //         market_fluctuate: (-0.5+Math.random()).toFixed(2)+'%',
+    //         direct: (-0.5+Math.random()).toFixed(2)>0
+    //     }
+    // ];
+
 });
 
 var server = app.listen(3000, function () {
@@ -155,3 +172,48 @@ var server = app.listen(3000, function () {
     var port = server.address().port;
     console.log('Example app listening at http://%s:%s', host, port);
 });
+
+
+
+function callAPI(jsonObject, childpath, callback){
+    var buf = new Buffer(JSON.stringify(jsonObject));
+    var options = {
+        port: 18000,
+        hostname: hostname,
+        method: 'POST',
+        path: childpath,
+        timeout: 3000,
+        headers: {
+            'Content-Type': 'application/json; encoding=utf-8',
+            'Accept': 'application/json',
+            'Content-Length': buf.length
+        }
+    };
+
+    var body = '';
+
+    var req = http.request(options, function(res) {
+        console.log("Got response: " + res.statusCode);
+        if(res.statusCode!==200){
+            callback(res.statusCode, 'error code: '+res.statusCode);
+        }
+        res.on('data', function(d) {
+            body += d;
+        }).on('end', function() {
+            console.log(res.headers);
+            console.log(body);
+            callback(null, JSON.parse(body));
+        });
+
+    }).on('error', function(e) {
+        console.log("Got error: " + e.message);
+        callback(e, e.message);
+    });
+
+    req.setTimeout(3000, function(){
+        callback('timeout', 'timeout');
+    });
+
+    req.write(JSON.stringify(jsonObject));
+    req.end();
+};
