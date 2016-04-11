@@ -92,7 +92,7 @@ app.post('/login', function(req, res){
     };
     if(req.body.username === 'wanghan'&&req.body.password === 'wanghan'){
         returnData.code = 0;
-        var hour = 3600000
+        var hour = 2*3600000
         req.session.cookie.expires = new Date(Date.now() + hour)
         req.session.cookie.maxAge = hour
         req.session.user_id = 'wanghan';
@@ -125,7 +125,7 @@ app.post('/logout', function(req, res){
 app.post('/marketInfo', function(req, res){
     var returnData = {};
     var json = {};
-    callAPI(json, '/stock/getAllMarketIndexNow', function(err, data){
+    callAPI(json, '/stock/getAllMarketIndexNow', 'POST', function(err, data){
         if(err){
             returnData.code = -1;
         }else{
@@ -138,34 +138,31 @@ app.post('/marketInfo', function(req, res){
                 e.direct = parseFloat(e.market_fluctuate)>0;
             });
         }
+        //console.log(returnData);
+        res.send(returnData);
+    });
+});
+
+app.post('/getMarketChart', function(req, res){
+    console.log('getMarketChart'+JSON.stringify(req.body));
+
+    var returnData = {};
+    var json = {
+        stock_code: req.body.stock_code,
+        num_day: 66
+    };
+
+    callAPI(json, '/stock/getMarketDayInfo?stock_code='+json.stock_code+'&num_day='+json.num_day, 'GET', function(err, data){
+        if(err){
+            returnData.code = -1;
+        }else {
+            returnData.code = 0;
+            returnData.data = data.data;
+        }
+        console.log(data);
         console.log(returnData);
         res.send(returnData);
     });
-
-    // var returnData = [
-    //     {
-    //         name: '上证指数',
-    //         market_index: (2985.49+Math.random()).toFixed(2),
-    //         market_code: 'sh000001',
-    //         market_fluctuate: (-0.5+Math.random()).toFixed(2)+'%',
-    //         direct: (-0.5+Math.random()).toFixed(2)>0
-    //     },
-    //     {
-    //         name: '深证成指',
-    //         market_index: (10413.21+Math.random()).toFixed(2),
-    //         market_code: 'sz399001',
-    //         market_fluctuate: (-0.5+Math.random()).toFixed(2)+'%',
-    //         direct: (-0.5+Math.random()).toFixed(2)>0
-    //     },
-    //     {
-    //         name: '创业板指',
-    //         market_index: (2229.49+Math.random()).toFixed(2),
-    //         market_code: 'sz399006',
-    //         market_fluctuate: (-0.5+Math.random()).toFixed(2)+'%',
-    //         direct: (-0.5+Math.random()).toFixed(2)>0
-    //     }
-    // ];
-
 });
 
 var server = app.listen(3000, function () {
@@ -176,12 +173,12 @@ var server = app.listen(3000, function () {
 
 
 
-function callAPI(jsonObject, childpath, callback){
+function callAPI(jsonObject, childpath, method, callback){
     var buf = new Buffer(JSON.stringify(jsonObject));
     var options = {
         port: 18000,
         hostname: hostname,
-        method: 'POST',
+        method: method,
         path: childpath,
         timeout: 3000,
         headers: {
@@ -201,8 +198,8 @@ function callAPI(jsonObject, childpath, callback){
         res.on('data', function(d) {
             body += d;
         }).on('end', function() {
-            console.log(res.headers);
-            console.log(body);
+            //console.log(res.headers);
+            //console.log(body);
             callback(null, JSON.parse(body));
         });
 

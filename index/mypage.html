@@ -129,10 +129,9 @@
         <!-- ./col -->
         <div class="col-lg-4 col-xs-12" ng-repeat="item in marketdata">
           <!-- small box -->
-          <div class="small-box" ng-class="{true: 'bg-red', false:'bg-green'}[item.direct]">
+          <div ng-click="marketInfoClick(item.market_code)" style="cursor:pointer" class="small-box" ng-class="{true: 'bg-red', false:'bg-green'}[item.direct]">
             <div class="inner">
               <h2 ng-bind="item.market_index">
-
               </h2>
               <sup style="font-size: 20px" ng-bind="item.market_fluctuate">
               </sup>
@@ -155,8 +154,9 @@
             </ul>
             <div class="tab-content no-padding" style="position: relative; height: 300px;">
               <!-- 走势图 -->
-
-
+              <div id="stockChart">
+                
+              </div>
             </div>
           </div>
           <!-- /.nav-tabs-custom -->
@@ -808,6 +808,9 @@
 <script src="fastclick.js"></script>
 <!-- AdminLTE App -->
 <script src="app.min.js"></script>
+
+<script src="http://cdn.hcharts.cn/highstock/highstock.js"></script>
+
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <!-- AdminLTE for demo purposes -->
 <script src="demo.js"></script>
