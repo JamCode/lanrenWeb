@@ -130,7 +130,7 @@ app.post('/marketInfo', function(req, res){
             returnData.code = -1;
         }else{
             returnData.code = 0;
-            returnData.data = data;
+            returnData.data = data.data;
             returnData.data.forEach(function(e){
                 e.name = e.market_name;
                 e.market_index = e.market_index_value_now;
