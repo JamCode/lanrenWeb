@@ -34,6 +34,11 @@ angular.module('myApp', []).run(function($rootScope, $window) {
             $scope.marketdata.forEach(function(e){
                 e.market_fluctuate = e.market_fluctuate+'%';
             });
+
+            $scope.selected = {
+                name: $scope.marketdata[0].name+'('+$scope.marketdata[0].market_code+')',
+                stock_code: $scope.marketdata[0].market_code
+            };
         }else{
             $scope.err_code = data.code;
         }
@@ -55,10 +60,7 @@ angular.module('myApp', []).run(function($rootScope, $window) {
 
     //获取自选股票
     console.log($scope.marketdata);
-    $scope.selected = {
-        name: '上证指数',
-        stock_code: 'sh000001'
-    };
+
 });
 
 function getMarketInfo(http, callback){
