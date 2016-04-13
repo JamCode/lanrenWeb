@@ -247,6 +247,24 @@ app.post('/addstock', function(req, res){
     });
 });
 
+app.post('/delstock', function(req, res){
+    var returnData = {};
+    var json = {
+        stock_code: req.body.stock_code,
+        user_id: 'c186c03ba298bc3cc20490684010a353'
+    };
+    callAPI(json, '/stock/delstock', 'POST', function(err, data){
+        if(err){
+            returnData.code = -1;
+        }else{
+            returnData.code = 0;
+            returnData.data = data.data;
+        }
+        console.log(returnData);
+        res.send(returnData);
+    });
+});
+
 var server = app.listen(3000, function () {
     var host = server.address().address;
     var port = server.address().port;
