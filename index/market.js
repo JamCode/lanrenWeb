@@ -63,7 +63,29 @@ angular.module('myApp', []).run(function($rootScope, $window) {
     }, 10*1000);
 
     //获取自选股票
-    console.log($scope.marketdata);
+    getChooseStockListInfo($http, $scope);
+    $interval(function () {
+        getChooseStockListInfo($http, $scope);
+    }, 10*1000);
+    //自选股点击事件
+    $scope.stockInfoClick = function(stock_code){
+        console.log(stock_code);
+        $scope.chooseStockList.forEach(function(e){
+            if(e.stock_code === stock_code){
+                $scope.selected = {
+                    name: e.stock_name+'('+e.stock_code+')',
+                    stock_code: stock_code
+                };
+            }
+        });
+        $http.post('getStockChart', {
+            stock_code:$scope.selected.stock_code
+        }).success(function(data){
+            console.log(data);
+            showChart(data);
+        });
+    }
+
 
 
     //大盘指数点击事件
@@ -80,7 +102,52 @@ angular.module('myApp', []).run(function($rootScope, $window) {
 
         getMarketChart($http, $scope);
     };
+
+
+    //股票搜索和添加功能
+    $scope.searchText = '';
+    $scope.searchStockClick = function(searchText){
+        console.log(searchText);
+        $http.post('getStock', {stock_alpha_info:searchText}).success(function(data){
+            if(data.code === 0){
+                $scope.searchStockList = data.data;
+            }else{
+                scope.err_code = data.code;
+            }
+        });
+    };
+    $scope.selectStockCode = 'init';
+    $scope.addstock = function(){
+        console.log($scope.selectStockCode);
+        $http.post('addstock', {stock_code:$scope.selectStockCode}).success(function(data){
+            if(data.code === 0){
+                getChooseStockListInfo($http, $scope);
+            }else{
+                scope.err_code = data.code;
+            }
+            $('#searchStockModal').modal('hide')
+        });
+    }
+
+
+    //自选股删除
+    $scope.showDelete = function(item){
+        console.log(item.stock_code);
+    };
 });
+
+function getChooseStockListInfo(http, scope){
+    http.post('getChooseStockListInfo',{}).success(function(data){
+        if(data.code === 0){
+            scope.chooseStockList = data.data;
+            scope.chooseStockList.forEach(function(e){
+                e.fluctuate = e.fluctuate+'%';
+            });
+        }else{
+            scope.err_code = data.code;
+        }
+    });
+}
 
 function getMarketInfo(http, callback){
     console.log('call getMarketInfo');
@@ -150,7 +217,6 @@ function showChart(data) {
             if (data.data[i].twentyday_av_price != 0 && data.data[i].twentyday_av_price != null) {
                 twentyAvPrices.push([data.data[i].timestamp_ms, data.data[i].twentyday_av_price]);
             }
-            console.log(data.data[i].timestamp_ms);
         }
 
         if (now != null) {
@@ -181,11 +247,10 @@ function showChart(data) {
             yAxis: [{
                 labels: {
                     style: {
-                        'fontSize': '28px'
+                        'fontSize': '14px'
                     },
                     align: 'left',
-                    //x: -3,
-                    // x: -<%=width % >+5,
+                    // x: -3,
                     step: 2
                 },
 
@@ -206,15 +271,16 @@ function showChart(data) {
             xAxis: {
                 labels: {
                     style: {
-                        'fontSize': '28px'
+                        'fontSize': '14px'
                     },
                     step: 2
                 }
             },
 
-            // chart: {
-            //     height: <%=height % >
-            // },
+            chart: {
+                height: 300
+            },
+
             navigator: {
                 enabled: false
             },

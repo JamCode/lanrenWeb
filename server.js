@@ -159,7 +159,89 @@ app.post('/getMarketChart', function(req, res){
             returnData.code = 0;
             returnData.data = data.data;
         }
-        console.log(data);
+        //console.log(data);
+        //console.log(returnData);
+        res.send(returnData);
+    });
+});
+
+app.post('/getStockChart', function(req, res){
+    var returnData = {};
+    var json = {
+        stock_code: req.body.stock_code,
+        num_day: 66
+    };
+    callAPI(json, '/stock/getStockDayInfo?stock_code='+json.stock_code+'&num_day='+json.num_day, 'GET', function(err, data){
+        if(err){
+            returnData.code = -1;
+        }else {
+            returnData.code = 0;
+            returnData.data = data.data;
+        }
+        //console.log(data);
+        //console.log(returnData);
+        res.send(returnData);
+    });
+});
+
+app.post('/getChooseStockListInfo', function(req, res){
+    var returnData = {};
+    var json = {
+        user_id: 'c186c03ba298bc3cc20490684010a353'
+    };
+
+    callAPI(json, '/stock/getChooseStockListInfo', 'POST', function(err, data){
+        if(err){
+            returnData.code = -1;
+        }else{
+            returnData.code = 0;
+            returnData.data = [];
+            for(var obj in data.data){
+                data.data[obj].direct = data.data[obj].fluctuate>0;
+                returnData.data.push(data.data[obj]);
+            }
+
+            returnData.data.sort(function(a, b){
+                return a.add_timestamp_ms<b.add_timestamp_ms;
+            });
+        }
+        console.log(returnData);
+        //console.log(returnData);
+        res.send(returnData);
+    });
+});
+
+app.post('/getStock', function(req, res){
+    var returnData = {};
+    var json = {
+        stock_alpha_info: req.body.stock_alpha_info
+    };
+    callAPI(json, '/stock/getStock', 'POST', function(err, data){
+        if(err){
+            returnData.code = -1;
+        }else{
+            returnData.code = 0;
+            returnData.data = data.data;
+        }
+        console.log(returnData);
+        res.send(returnData);
+    });
+});
+
+
+app.post('/addstock', function(req, res){
+    var returnData = {};
+    var json = {
+        stock_code: req.body.stock_code,
+        user_id: 'c186c03ba298bc3cc20490684010a353'
+    };
+    callAPI(json, '/stock/addstock', 'POST', function(err, data){
+        if(err){
+            returnData.code = -1;
+        }else{
+            returnData.code = 0;
+            returnData.data = data.data;
+        }
         console.log(returnData);
         res.send(returnData);
     });

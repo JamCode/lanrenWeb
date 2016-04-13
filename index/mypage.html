@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>懒人股票</title>
+  <title>行情系统</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.6 -->
@@ -45,9 +45,9 @@
     <!-- Logo -->
     <a href="index2.html" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><b>懒</b></span>
+      <span class="logo-mini"><b>行</b></span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>懒人股票</b></span>
+      <span class="logo-lg"><b>行情系统</b></span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top" ng-controller="navController">
@@ -155,7 +155,7 @@
             <div class="tab-content no-padding" style="position: relative; height: 300px;">
               <!-- 走势图 -->
               <div id="stockChart">
-                
+
               </div>
             </div>
           </div>
@@ -398,47 +398,76 @@
         <section class="col-lg-5 connectedSortable">
 
           <!-- Map box -->
-          <div class="box box-solid bg-light-blue-gradient">
+          <div class="box box-danger">
             <div class="box-header">
-              <!-- tools box -->
-              <div class="pull-right box-tools">
-                <button type="button" class="btn btn-primary btn-sm daterange pull-right" data-toggle="tooltip" title="Date range">
-                  <i class="fa fa-calendar"></i></button>
-                <button type="button" class="btn btn-primary btn-sm pull-right" data-widget="collapse" data-toggle="tooltip" title="Collapse" style="margin-right: 5px;">
-                  <i class="fa fa-minus"></i></button>
+              <i class="ion ion-clipboard"></i>
+              <h3 class="box-title">自选</h3>
+              <div class="box-tools pull-right">
+                  <button data-toggle="modal" data-target="#searchStockModal" type="button" class="btn btn-default pull-right"><i class="fa fa-plus"></i></button>
               </div>
-              <!-- /. tools -->
+              <div class="modal fade" id="searchStockModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                  <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">股票搜索</h4>
+                      </div>
+                      <div class="modal-body">
+                        <div class="input-group">
+                          <input type="text" name="message" placeholder="输入股票名称代码或首字母" class="form-control" ng-model="searchText">
+                          <span class="input-group-btn">
+                            <button type="button" class="btn btn-primary btn-flat" ng-click="searchStockClick(searchText)">搜索</button>
+                          </span>
+                        </div>
+                        <ul class="list-group">
+                            <li class="list-group-item" ng-repeat="item in searchStockList">
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <h5>
+                                            {{item.stock_name}}({{item.stock_code}})
+                                        </h5>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input name="selectstock" ng-model="$parent.selectStockCode" type="radio" value="{{item.stock_code}}" />
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
 
-              <i class="fa fa-map-marker"></i>
-
-              <h3 class="box-title">
-                Visitors
-              </h3>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" ng-click="addstock()">添加</button>
+                      </div>
+                    </div>
+                  </div>
+              </div>
             </div>
+            <!-- /.box-header -->
             <div class="box-body">
-              <div id="world-map" style="height: 250px; width: 100%;"></div>
+                <div class="list-group">
+                    <a href="#" class="list-group-item" ng-repeat="item in chooseStockList" ng-click="stockInfoClick(item.stock_code)">
+                        <div class="row" on-hold="showDelete(item)">
+                            <div class="col-md-4">
+                                <h4 ng-bind="item.stock_name">
+                                </h4>
+                                <sup style="font-size: 14px" ng-bind="item.stock_code" class="ng-binding"></sup>
+                            </div>
+                            <div class="col-md-4">
+                                <h3 ng-bind="item.price">
+                                </h3>
+                            </div>
+                            <div class="col-md-4">
+                                <h3>
+                                    <span class="label" ng-bind="item.fluctuate"  ng-class="{true: 'bg-red', false:'bg-green'}[item.direct]"></span>
+                                </h3>
+                            </div>
+                        </div>
+                    </a>
+                </div>
             </div>
-            <!-- /.box-body-->
-            <div class="box-footer no-border">
-              <div class="row">
-                <div class="col-xs-4 text-center" style="border-right: 1px solid #f4f4f4">
-                  <div id="sparkline-1"></div>
-                  <div class="knob-label">Visitors</div>
-                </div>
-                <!-- ./col -->
-                <div class="col-xs-4 text-center" style="border-right: 1px solid #f4f4f4">
-                  <div id="sparkline-2"></div>
-                  <div class="knob-label">Online</div>
-                </div>
-                <!-- ./col -->
-                <div class="col-xs-4 text-center">
-                  <div id="sparkline-3"></div>
-                  <div class="knob-label">Exists</div>
-                </div>
-                <!-- ./col -->
-              </div>
-              <!-- /.row -->
-            </div>
+            <!-- /.box-body -->
+
           </div>
           <!-- /.box -->
 
