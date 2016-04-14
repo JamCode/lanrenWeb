@@ -1,0 +1,315 @@
+<!-- Main content -->
+<section class="content" ng-controller="contentController">
+  <!-- Small boxes (Stat box) -->
+  <div class="row">
+    <!-- ./col -->
+    <div class="col-lg-4 col-xs-12" ng-repeat="item in marketdata">
+      <!-- small box -->
+      <div ng-click="marketInfoClick(item.market_code)" style="cursor:pointer"
+      class="small-box" ng-class="{true: 'bg-red', false:'bg-green'}[item.direct]">
+        <div class="inner">
+          <h2 ng-bind="item.market_index">
+          </h2>
+          <sup style="font-size: 20px" ng-bind="item.market_fluctuate">
+          </sup>
+          <h4 ng-bind="item.name">
+          </h4>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.row -->
+  <!-- Main row -->
+  <div class="row">
+    <!-- Left col -->
+    <section class="col-lg-7 connectedSortable">
+      <!-- Custom tabs (Charts with tabs)-->
+      <div class="nav-tabs-custom">
+        <!-- Tabs within a box -->
+        <ul class="nav nav-tabs pull-right">
+          <li class="pull-left header">
+            <i class="fa fa-inbox">
+            </i>
+            走势图
+          </li>
+          <li class="pull-right header" ng-bind="selected.name">
+          </li>
+        </ul>
+        <div class="tab-content no-padding" style="position: relative; height: 300px;">
+          <!-- 走势图 -->
+          <div id="stockChart">
+          </div>
+        </div>
+      </div>
+      <!-- /.nav-tabs-custom -->
+      <!-- Chat box -->
+      <div class="box box-danger">
+        <div class="box-header">
+          <i class="fa fa-th">
+          </i>
+          <h3 class="box-title">
+            {{selected.name}}
+          </h3>
+        </div>
+        <div class="box-body">
+          <table class="table">
+            <tbody>
+              <tr>
+                <td>
+                  <h4>
+                    今开
+                  </h4>
+                </td>
+                <td>
+                  <h4>
+                    {{selected.open_price}}
+                  </h4>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <h4>
+                    昨收
+                  </h4>
+                </td>
+                <td>
+                  <h4>
+                    {{selected.yesterday_price}}
+                  </h4>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <h4>
+                    成交额
+                  </h4>
+                </td>
+                <td>
+                  <h4>
+                    {{selected.volume}}亿
+                  </h4>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <h4>
+                    成交量
+                  </h4>
+                </td>
+                <td>
+                  <h4>
+                    {{selected.amount}}万手
+                  </h4>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <h4>
+                    总市值
+                  </h4>
+                </td>
+                <td>
+                  <h4>
+                    {{selected.marketValue}}亿
+                  </h4>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <h4>
+                    流通市值
+                  </h4>
+                </td>
+                <td>
+                  <h4>
+                    {{selected.flowMarketValue}}亿
+                  </h4>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <h4>
+                    市盈率
+                  </h4>
+                </td>
+                <td>
+                  <h4>
+                    {{selected.priceearning}}
+                  </h4>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <h4>
+                    市净率
+                  </h4>
+                </td>
+                <td>
+                  <h4>
+                    {{selected.pb}}
+                  </h4>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <h4>
+                    净资产收益率
+                  </h4>
+                </td>
+                <td>
+                  <h4>
+                    {{(100*selected.pb/selected.priceearning).toFixed(2)}}%
+                  </h4>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+    <!-- /.Left col -->
+    <!-- right col (We are only adding the ID to make the widgets sortable)-->
+    <section class="col-lg-5 connectedSortable">
+      <!-- Map box -->
+      <div class="box box-danger">
+        <div class="box-header">
+          <i class="ion ion-clipboard">
+          </i>
+          <h3 class="box-title">
+            自选
+          </h3>
+          <div class="box-tools pull-right">
+            <button data-toggle="modal" data-target="#searchStockModal" type="button"
+            class="btn btn-default pull-right">
+              <i class="fa fa-plus">
+              </i>
+            </button>
+          </div>
+          <div class="modal fade" id="searchStockModal" tabindex="-1" role="dialog"
+          aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-sm" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">
+                      &times;
+                    </span>
+                  </button>
+                  <h4 class="modal-title" id="myModalLabel">
+                    股票搜索
+                  </h4>
+                </div>
+                <div class="modal-body">
+                  <div class="input-group">
+                    <input type="text" name="message" placeholder="输入股票名称代码或首字母" class="form-control"
+                    ng-model="searchText">
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-primary btn-flat" ng-click="searchStockClick(searchText)">
+                        搜索
+                      </button>
+                    </span>
+                  </div>
+                  <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="item in searchStockList">
+                      <div class="row">
+                        <div class="col-md-9">
+                          <h5>
+                            {{item.stock_name}}({{item.stock_code}})
+                          </h5>
+                        </div>
+                        <div class="col-md-3">
+                          <h5>
+                            <input name="selectstock" ng-model="$parent.selectStockCode" type="radio"
+                            value="{{item.stock_code}}" />
+                          </h5>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">
+                    取消
+                  </button>
+                  <button type="button" class="btn btn-primary" ng-click="addstock()">
+                    添加
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal fade" id="deleteStockModal" tabindex="-1" role="dialog"
+          aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">
+                      &times;
+                    </span>
+                  </button>
+                  <h4 class="modal-title" id="myModalLabel">
+                    删除自选股
+                  </h4>
+                </div>
+                <div class="modal-body">
+                  <h3>
+                    {{preDeleteStock.stock_name}}({{preDeleteStock.stock_code}})
+                  </h3>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">
+                    取消
+                  </button>
+                  <button type="button" class="btn btn-primary" ng-click="confirmDeleteStock(preDeleteStock.stock_code)">
+                    删除
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+          <div class="list-group">
+            <a href="#" class="list-group-item" ng-repeat="item in chooseStockList"
+            ng-click="stockInfoClick(item.stock_code)">
+              <div class="row" ng-mouseover="overItem(item);" ng-mouseleave="levelItem(item);">
+                <div class="col-md-4">
+                  <h4 ng-bind="item.stock_name">
+                  </h4>
+                  <sup style="font-size: 14px" ng-bind="item.stock_code" class="ng-binding">
+                  </sup>
+                </div>
+                <div class="col-md-3">
+                  <h3 ng-bind="item.price">
+                  </h3>
+                </div>
+                <div class="col-md-3">
+                  <h3>
+                    <span class="label" ng-bind="item.fluctuate" ng-class="{true: 'bg-red', false:'bg-green'}[item.direct]">
+                    </span>
+                  </h3>
+                </div>
+                <div class="col-md-2">
+                  <div class="tools" ng-show="item.showTrash" ng-click="deleteStock(item)">
+                    <h3>
+                      <i class="fa fa-trash-o">
+                      </i>
+                    </h3>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+        <!-- /.box-body -->
+      </div>
+      <!-- /.box -->
+    </section>
+    <!-- right col -->
+  </div>
+  <!-- /.row (main row) -->
+</section>
+<!-- /.content -->
