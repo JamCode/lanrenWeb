@@ -1,0 +1,46 @@
+<section class="content" ng-controller="followController">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="box box-danger" ng-repeat="item in followContent">
+                <div class="box-body">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <img class="img-circle" style="width: 10%" src="http://112.74.102.178:18000/image/?name={{item.user_facethumbnail}}" />
+                                    <h3>{{item.user_name}} {{(item.user_look_yield).toFixed(2)}}%</h3>
+                                </td>
+
+                                <td>
+                                    <h4>一周前</h4>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h4>
+                                        {{item.stock_name}}({{item.stock_code}})
+                                    </h4>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h4>
+                                        现价/成本 {{item.look_cur_price}}({{item.look_stock_price}})
+                                    </h4>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h4>
+                                        浮动盈余 {{(item.stock_yield).toFixed(2)}}%
+                                    </h4>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

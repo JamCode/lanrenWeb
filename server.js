@@ -205,7 +205,6 @@ app.post('/getChooseStockListInfo', function(req, res){
                 return a.add_timestamp_ms<b.add_timestamp_ms;
             });
         }
-        console.log(returnData);
         //console.log(returnData);
         res.send(returnData);
     });
@@ -223,7 +222,6 @@ app.post('/getStock', function(req, res){
             returnData.code = 0;
             returnData.data = data.data;
         }
-        console.log(returnData);
         res.send(returnData);
     });
 });
@@ -254,6 +252,61 @@ app.post('/delstock', function(req, res){
         user_id: 'c186c03ba298bc3cc20490684010a353'
     };
     callAPI(json, '/stock/delstock', 'POST', function(err, data){
+        if(err){
+            returnData.code = -1;
+        }else{
+            returnData.code = 0;
+            returnData.data = data.data;
+        }
+        console.log(returnData);
+        res.send(returnData);
+    });
+});
+
+
+app.post('/getLookInfo', function(req, res){
+    var returnData = {};
+    var json = {
+        user_id: 'c186c03ba298bc3cc20490684010a353'
+    };
+    callAPI(json, '/stock/getLookInfoByUser', 'POST', function(err, data){
+        if(err){
+            returnData.code = -1;
+        }else{
+            returnData.code = 0;
+            returnData.data = data.data;
+        }
+        res.send(returnData);
+    });
+});
+
+app.post('/getUserDtls', function(req, res){
+    var returnData = {};
+    var json = {
+        user_id: 'c186c03ba298bc3cc20490684010a353'
+    };
+    callAPI(json, '/user/userBaseInfo', 'POST', function(err, data){
+        if(err){
+            returnData.code = -1;
+        }else{
+            returnData.code = 0;
+            returnData.data = data.data;
+        }
+        res.send(returnData);
+    });
+});
+
+app.post('/getFollowContent', function(req, res){
+    console.log('enter getFollowContent');
+    var returnData = {};
+    var json = {
+        user_id: 'c186c03ba298bc3cc20490684010a353',
+        look_update_timestamp: Date.now()
+    };
+
+    console.log(json);
+    //res.send(json);
+    callAPI(json, '/stock/getFollowLookInfo', 'POST', function(err, data){
         if(err){
             returnData.code = -1;
         }else{

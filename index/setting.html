@@ -1,0 +1,125 @@
+<section class="content" ng-controller="settingController">
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="box box-danger">
+              <div class="box-header">
+                <i class="glyphicon glyphicon-user">
+                </i>
+                <h3 class="box-title">
+                    个人资料
+                </h3>
+              </div>
+              <div class="box-body">
+                <table class="table">
+                    <tbody>
+                      <tr>
+                        <td>
+                            <img style="width: 20%" src="face.png" class="img-circle" alt="User Image">
+                        </td>
+                        <td>
+                          <h3>
+                            {{user.username}}
+                          </h3>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <h3>
+                            总收益
+                        </h3>
+                        </td>
+                        <td>
+                          <h3>
+                              <span class="label" ng-class="{true: 'bg-red', false:'bg-green'}[userDtls.user_look_yield>0]">
+                                  {{(userDtls.user_look_yield).toFixed(2)}}%
+                              </span>
+                          </h3>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <h3>
+                            我关注的人
+                          </h3>
+                        </td>
+                        <td>
+                          <h3>
+                            {{userDtls.user_follow_count}}
+                          </h3>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <h3>
+                            关注我的人
+                          </h3>
+                        </td>
+                        <td>
+                          <h3>
+                            {{userDtls.user_fans_count}}
+                          </h3>
+                        </td>
+                      </tr>
+                    </tbody>
+                </table>
+              </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="box box-danger">
+              <div class="box-header">
+                <i class="glyphicon glyphicon-heart">
+                </i>
+                <h3 class="box-title">
+                    当前看多
+                </h3>
+              </div>
+              <div class="box-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                <h4>
+                                股票
+                                </h4>
+                            </th>
+                            <th>
+                                <h4>
+                                现价/成本
+                                </h4>
+                            </th>
+                            <th>
+                                <h4>
+                                浮动盈亏
+                                </h4>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in lookInfo">
+                            <td>
+                                <h4>
+                                {{item.stock_name}}({{item.stock_code}})
+                                </h4>
+                            </td>
+                            <td>
+                                <h4>
+                                {{item.look_cur_price}}/{{item.look_stock_price}}
+                                </h4>
+                            </td>
+                            <td>
+                                <h4>
+                                <span class="label" ng-class="{true: 'bg-red', false:'bg-green'}[item.stock_yield>0]">
+                                {{(item.stock_yield).toFixed(2)}}%
+                                </span>
+                                </h4>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+              </div>
+            </div>
+        </div>
+    </div>
+</section>
